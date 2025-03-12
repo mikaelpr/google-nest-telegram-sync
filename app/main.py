@@ -23,7 +23,7 @@ assert GOOGLE_MASTER_TOKEN and GOOGLE_USERNAME and TELEGRAM_CHANNEL_ID and TELEG
 REFRESH_EVERY_X_MINUTES=2
 
 
-def main():
+async def main():
 
     logger.info("Welcome to the Google Nest Doorbell <-> Telegram Syncer")
 
@@ -53,10 +53,10 @@ def main():
     scheduler.start()
 
     try:
-        asyncio.get_event_loop().run_forever()
+        await asyncio.sleep(float('inf'))
     except (KeyboardInterrupt, SystemExit):
         pass
 
     
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

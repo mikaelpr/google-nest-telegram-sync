@@ -5,6 +5,7 @@ from models import CameraEvent
 from io import BytesIO
 import pytz
 import datetime
+import os
 
 from telegram import Bot, InputMediaVideo
 
@@ -18,6 +19,7 @@ class TelegramEventsSync(object):
         self._telegram_bot = Bot(token=telegram_bot_token)
         self._telegram_channel_id = telegram_channel_id
         self._nest_camera_devices = nest_camera_devices
+        self._timezone = os.environ.get('TIMEZONE', 'UTC')
  
         self._recent_events = set()
 
@@ -25,7 +27,7 @@ class TelegramEventsSync(object):
     
         logger.info(f"Syncing: {nest_device.device_id}")
         all_recent_camera_events : list[CameraEvent] = nest_device.get_events(
-            end_time = pytz.timezone("Israel").localize(datetime.datetime.now()),
+            end_time = pytz.timezone(self._timezone).localize(datetime.datetime.now()),
             duration_minutes=3 * 60 # This is the maxmimum time Google is saving my videos
         )
 
@@ -43,7 +45,7 @@ class TelegramEventsSync(object):
             video_io = BytesIO(video_data)
 
             video_caption = f"{nest_device.device_name} clip"
-            event_local_time = camera_event_obj.start_time.astimezone(pytz.timezone('Israel'))
+            event_local_time = camera_event_obj.start_time.astimezone(pytz.timezone(self._timezone))
             video_media = InputMediaVideo(
                 media=video_io, 
                 caption=video_caption + f" [{event_local_time.strftime(self.TELEGRAM_TIME_FORMAT)}]"

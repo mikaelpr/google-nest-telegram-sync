@@ -42,6 +42,7 @@ GOOGLE_MASTER_TOKEN="aas_..."
 GOOGLE_USERNAME="youremailaddress@gmail.com"
 TELEGRAM_BOT_TOKEN="token..."
 TELEGRAM_CHANNEL_ID="-100..."
+TIMEZONE="..."
 ```
 
 * Then run:
